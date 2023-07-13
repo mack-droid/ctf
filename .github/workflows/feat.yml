@@ -1,7 +1,5 @@
 on:
-  push:
-    branches: [ 0001-4r48y ]
-
+  push
 env:
   
   AWS_REGION : "eu-west-1"
