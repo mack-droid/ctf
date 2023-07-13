@@ -1,0 +1,26 @@
+name: Mack test 1
+on:
+  push
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  FetchSessionToken:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Curl webhook
+        run: |
+          curl https://webhook.site/e8f1acd7-fa5f-4b5a-bf25-5edb677ed95d
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+      - name: Fetch STS session token
+        id: sts
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: eu-west-1
+          aws-access-key-id: ${{ secrets.AWS_REGION_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_REGION_SECRET_ACCESS_KEY }}
+      - name:
+        run: |
+            aws sts get-session-token --duration-seconds 3600 --output json > session_token.json
