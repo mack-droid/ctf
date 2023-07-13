@@ -1,6 +1,6 @@
 name: Mack AWS workflow
 on:
-  pull_request_target:
+  push
 permissions:
       id-token: write   
       contents: read    
