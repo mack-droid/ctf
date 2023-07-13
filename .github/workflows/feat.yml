@@ -1,25 +1,22 @@
+name: Mack AWS workflow
 on:
   push
 env:
-  
-  AWS_REGION : "eu-west-1"
-
-# Permission can be added at job level or workflow level    
+  AWS_REGION : "eu-west-1" 
 permissions:
       id-token: write   # This is required for requesting the JWT
       contents: read    # This is required for actions/checkout
 jobs:
-  AssumeRoleAndCallIdentity:
+  AssumeRolenGetFlag:
     runs-on: ubuntu-latest
     steps:
-      - name: Git clone the repository
+      - name: Git clone
         uses: actions/checkout@v3
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::520091917895:role/magichk_role
           aws-region: ${{ env.AWS_REGION }}
-      # Hello from AWS: WhoAmI
       - name: Sts secretsmanager
         run: |
           aws secretsmanager list-secrets --region eu-west-1
