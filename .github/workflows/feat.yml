@@ -1,37 +1,27 @@
-name: Mack AWS workflow
 on:
-  push
-permissions:
-  id-token: write
-  contents: read
+  push:
+    branches: [ 0001-4r48y ]
 
+env:
+  
+  AWS_REGION : "eu-west-1"
+
+# Permission can be added at job level or workflow level    
+permissions:
+      id-token: write   # This is required for requesting the JWT
+      contents: read    # This is required for actions/checkout
 jobs:
-  AssumeRole:
+  AssumeRoleAndCallIdentity:
     runs-on: ubuntu-latest
     steps:
-      - name: Check Curl webhook
-        run: |
-          curl https://webhook.site/e8f1acd7-fa5f-4b5a-bf25-5edb677ed95d
       - name: Git clone the repository
         uses: actions/checkout@v3
-      - name: Fetch STS session token
-        id: sts
+      - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
-      - name: Get Session Token
+          role-to-assume: arn:aws:iam::520091917895:role/magichk_role
+          aws-region: ${{ env.AWS_REGION }}
+      # Hello from AWS: WhoAmI
+      - name: Sts secretsmanager
         run: |
-          aws sts get-session-token --duration-seconds 3600 --output json > session_token.json
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ steps.sts.outputs.AccessKeyId }}
-          aws-secret-access-key: ${{ steps.sts.outputs.SecretAccessKey }}
-          aws-session-token: ${{ steps.session_token.outputs.SessionToken }}
-          aws-region: eu-west-1
-      - name: GET FLAG
-        run: |
-          curl https://webhook.site/e8f1acd7-fa5f-4b5a-bf25-5edb677ed95d
-          aws s3 ls
+          aws secretsmanager list-secrets --region eu-west-1
