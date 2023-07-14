@@ -10,13 +10,13 @@ jobs:
   AssumeRolenGetFlag:
     runs-on: ubuntu-latest
     steps:
-      - name: Git clone
+      - name: Git Actions
         uses: actions/checkout@v3
-      - name: configure aws credentials
+      - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::520091917895:role/magichk_role
           aws-region: ${{ env.AWS_REGION }}
-      - name: Sts secretsmanager
+      - name: Run STS id
         run: |
-          aws secretsmanager list-secrets --region eu-west-1
+          aws sts get-caller-identity
